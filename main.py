@@ -1,6 +1,8 @@
 from deepstack import DeepStackPrediction
 from get_image_redis import ImageRedis
 from get_data_rabbit import Consumer
+from send_json_rabbit import Producer
+import pika
 
 def main():
     X = ImageRedis('localhost', '6379', 'test_images/test_image.jpg')
@@ -27,10 +29,5 @@ def main():
     C.establish_connection()
     C.consume()
     C.start_consume()
-
-    # Y = Consumer('vdfnfbub', 'lg96txyrDMmv3Sp0FR5f86GXye9vpCZP')
-    # Y.establish_connection()
-    # Y.consume()
-
 if __name__ == '__main__':
     main()

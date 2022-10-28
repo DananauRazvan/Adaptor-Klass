@@ -1,5 +1,6 @@
 import pika
 import json
+from send_json_rabbit import Producer
 
 """
 Get data from RabbitMQ, a JSON file
@@ -17,12 +18,15 @@ class Consumer:
         self.channel = connection.channel()
 
     def callback(self, ch, method, properties, body):
-        """body += deepstack preds"""
+        body = json.loads(body)
+        body.update(self.json_predictions)
 
+        P = Producer('vdfnfbub', 'lg96txyrDMmv3Sp0FR5f86GXye9vpCZP')
+        P.establish_connection()
+        # P.queue_out()
+        P.queue_publish(json.dumps(body))
 
-        json_work=json.loads(body)
-        body += self.json_predictions.encode('utf-8')
-        print('Received %r' % body)
+        print('Received: %r' % body)
 
     def consume(self):
         self.channel.basic_consume(queue='Input', on_message_callback=self.callback, auto_ack=True)
