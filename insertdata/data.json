@@ -1,0 +1,72 @@
+{
+  "INPUT": {
+    "PHOTO": {
+      "IP": "172.28.8.9",
+      "USER": "admin",
+      "PASSWORD": "admin",
+      "PATH": "Path"
+    },
+    "METADATA": {
+      "LOG_LEVEL": "",
+      "UID":""
+    }
+  },
+  "ROUTE": [
+    {
+      "PROCESS": "CAR",
+      "QUEUE": "",
+      "MAX_PROCESSING_TIME": "30",
+      "INSERTED_TIME": "1666073138",
+      "CONDITIONS": [
+        {
+          "CONDITION": "",
+          "NEXT": [
+            {
+              "PROCESS": "PLATE",
+              "QUEUE": "PLATE_DETECTION_INPUT",
+              "MAX_PROCESSING_TIME": "30",
+              "INSERTED_TIME": "1666073138",
+              "CONDITIONS": [
+                {
+                  "CONDITION": "",
+                  "NEXT": [
+                    {
+                      "PROCESS": "OCR",
+                      "QUEUE": "OCR_DETECTION_INPUT",
+                      "MAX_PROCESSING_TIME": "30",
+                      "INSERTED_TIME": "1666073138",
+                      "CONDITIONS": [
+                        {
+                          "CONDITION": "if input == 'B100ABC' : checker = True",
+                          "NEXT": [
+                            {
+                              "PROCESS": "ELASTIC",
+                              "QUEUE": "OCR_ELASTIC_INPUT",
+                              "MAX_PROCESSING_TIME": "",
+                              "INSERTED_TIME": "1666073138",
+                              "CONDITIONS": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "PROCESS": "ELASTIC",
+                      "QUEUE": "PLATE_ELASTIC_INPUT",
+                      "CONDITIONS": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "PROCESS": "ELASTIC",
+              "QUEUE": "CAR_ELASTIC_INPUT",
+              "CONDITIONS": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
