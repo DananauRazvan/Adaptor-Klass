@@ -1,13 +1,14 @@
 import pika
-
+import json
 
 """
 Get data from RabbitMQ, a JSON file
 """
 class Consumer:
-    def __init__(self, username, password):
+    def __init__(self, username, password, json_predictions):
         self.username = username
         self.password = password
+        self.json_predictions = json_predictions
 
     def establish_connection(self):
         credentials = pika.PlainCredentials(username=self.username, password=self.password)
@@ -17,21 +18,14 @@ class Consumer:
 
     def callback(self, ch, method, properties, body):
         """body += deepstack preds"""
+
+
+        json_work=json.loads(body)
+        body += self.json_predictions.encode('utf-8')
         print('Received %r' % body)
 
     def consume(self):
         self.channel.basic_consume(queue='Input', on_message_callback=self.callback, auto_ack=True)
 
-    def get_message(self):
-        return self.message
-
     def start_consume(self):
         self.channel.start_consuming()
-
-
-
-# X = Consumer('vdfnfbub', 'lg96txyrDMmv3Sp0FR5f86GXye9vpCZP')
-# X.establish_connection()
-# X.consume()
-# X.start_consume()
-# print(X.get_message())

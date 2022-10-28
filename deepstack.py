@@ -1,5 +1,6 @@
 import requests
 import time
+import json
 
 
 """
@@ -30,7 +31,6 @@ class DeepStackPrediction:
     def get_all_objects_detected(self):
         for object in self.response['predictions']:
             self.list_object_detected.append(object['label'])
-            # self.list_object_detected[object] = self.list_object_detected.get(object, 0) + 1 .append(object['label'])
 
         return self.list_object_detected
 
@@ -39,3 +39,20 @@ class DeepStackPrediction:
             self.dict_object_detected[object] = self.dict_object_detected.get(object, 0) + 1
 
         return self.dict_object_detected
+
+    def get_object_det_json_response(self):
+        obj_list = []
+
+        for object in self.response['predictions']:
+            obj_list.append({'boundingbox': [object['y_min'], object['x_min'], object['y_max'], object['x_max']],
+                             'confidence': object['confidence'],
+                             'label': object['label']})
+
+        message = {
+            'OUTPUT': {
+                'PREDICTIONS': [obj_list],
+                'success': self.response['success']
+            }
+        }
+
+        return json.dumps(message)
