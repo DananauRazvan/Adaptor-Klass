@@ -12,13 +12,13 @@ import json
 f = open('data.json')
 message = json.load(f)
 
-
-start=time.time()
-channel.basic_publish(exchange='',
-                      routing_key='Input',
-                      body=json.dumps(message),
-                      properties=pika.BasicProperties(
-                          delivery_mode = 1 # make message persistent
-                      ))
-print(time.time()-start)
-time.sleep(2)
+for i in range(10):
+    start=time.time()
+    channel.basic_publish(exchange='',
+                          routing_key='Input',
+                          body=json.dumps(message),
+                          properties=pika.BasicProperties(
+                              delivery_mode = 1 # make message persistent
+                          ))
+    print(time.time()-start)
+    time.sleep(2)

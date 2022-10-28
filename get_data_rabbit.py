@@ -1,15 +1,16 @@
 import pika
 import json
 from send_json_rabbit import Producer
+from deepstack import DeepStackPrediction
+from get_image_redis import ImageRedis
 
 """
 Get data from RabbitMQ, a JSON file
 """
 class Consumer:
-    def __init__(self, username, password, json_predictions):
+    def __init__(self, username, password):
         self.username = username
         self.password = password
-        self.json_predictions = json_predictions
 
     def establish_connection(self):
         credentials = pika.PlainCredentials(username=self.username, password=self.password)
@@ -17,9 +18,22 @@ class Consumer:
         connection = pika.BlockingConnection(parameters)
         self.channel = connection.channel()
 
+    def call_api_deepstack(self):
+        X = ImageRedis('localhost', '6379', 'test_images/test_image.jpg')
+        X.establish_connection()
+        X.read_image()
+        X.encode_image()
+        X.write_redis()
+        X.read_from_redis()
+        encoded_message = X.get_encoded_image()  # Encoded message read from Redis
+
+        X = DeepStackPrediction(encoded_message)
+        X.deepstack_response()
+        self.deepstack_json_message = X.get_object_det_json_response()
+
     def callback(self, ch, method, properties, body):
         body = json.loads(body)
-        body.update(self.json_predictions)
+        body.update(self.deepstack_json_message)
 
         P = Producer('vdfnfbub', 'lg96txyrDMmv3Sp0FR5f86GXye9vpCZP')
         P.establish_connection()
