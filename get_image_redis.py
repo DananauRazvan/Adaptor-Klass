@@ -1,7 +1,7 @@
 import redis
 import cv2
 import numpy as np
-
+from logs import logs
 
 """
 Get image from Redis
@@ -11,6 +11,7 @@ class ImageRedis:
         self.host = host
         self.port = port
         self.image_path = image_path
+        self.logs = logs('get_image_redis.py', 'logs/get_image_redis_logs')
 
     def establish_connection(self):
         self.redis = redis.Redis(host=self.host, port=self.port)
@@ -29,4 +30,10 @@ class ImageRedis:
         self.read_redis = self.redis.get(self.image_path)
 
     def get_encoded_image(self):
-        return self.read_redis
+        try:
+            self.logs.info('Get image from Redis')
+
+            return self.read_redis
+
+        except Exception as e:
+            self.logs.error('Error occurred in Redis ' + str(e))
