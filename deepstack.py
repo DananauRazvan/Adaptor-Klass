@@ -55,4 +55,4 @@ class DeepStackPrediction:
             }
         }
 
-        return json.dumps(message)
+        return message

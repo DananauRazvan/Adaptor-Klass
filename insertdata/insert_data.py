@@ -12,7 +12,6 @@ import json
 f = open('data.json')
 message = json.load(f)
 
-
 start=time.time()
 channel.basic_publish(exchange='',
                       routing_key='Input',
@@ -21,4 +20,3 @@ channel.basic_publish(exchange='',
                           delivery_mode = 1 # make message persistent
                       ))
 print(time.time()-start)
-time.sleep(2)
