@@ -2,7 +2,7 @@ import logging
 import pika
 import time
 from pika.exchange_type import ExchangeType
-
+import logging
 
 credentials = pika.PlainCredentials('vdfnfbub', 'lg96txyrDMmv3Sp0FR5f86GXye9vpCZP')
 parameters = pika.ConnectionParameters('cow.rmq2.cloudamqp.com', credentials=credentials, virtual_host='vdfnfbub')
